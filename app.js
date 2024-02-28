@@ -7,6 +7,21 @@ const samplePaths = ["./stems/drums.wav", "./stems/bass.wav", "./stems/guitar1.w
 
 const loadSongBtn = document.getElementById("load-song")
 const playSongBtn = document.getElementById("play-song")
+const mixer = document.getElementById("mixer-container")
+
+// <input type="range" id="" class="volume" min="0" max="2" value="1" step="0.01" />
+function createFaders() {
+    fader = document.createElement("input")
+    fader.setAttribute("type", "range")
+    fader.setAttribute("class", "volume")
+    fader.setAttribute("id", `${splitFile}`)
+    fader.setAttribute("min", "0")
+    fader.setAttribute("max", "2")
+    fader.setAttribute("value", "1")
+    fader.setAttribute("step", "0.01")
+    mixer.appendChild(fader)
+    
+}
 
 loadSongBtn.addEventListener("click", () => {
     setupSamples(samplePaths).then((response) => {
@@ -31,10 +46,13 @@ async function getFile(filePath) {
 async function setupSamples(paths) {
     console.log("setting up samples")
     const audioBuffers = []
-
     for (const path of paths) {
         const sample = await getFile(path)
         audioBuffers.push(sample)
+        splitPath = path.split("/")
+        fileName = splitPath[2]
+        splitFile = fileName.split(".")[0]
+        createFaders()
     }
     console.log("set up done")
     return audioBuffers
