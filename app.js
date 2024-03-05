@@ -1,6 +1,7 @@
 
 const AudioContext = window.AudioContext || window.webkitAudioContext
 const audioContext = new AudioContext()
+let isPaused
 const samplePaths = ["./stems/drums.wav", "./stems/bass.wav", "./stems/guitar1.wav", "./stems/guitar2.wav", "./stems/piano.wav"]
 
 // Function to get audio file
@@ -55,13 +56,33 @@ function playSample(sampleData, time) {
     sourceNode.start(time)
 }
 
+function pauseSample() {
+    audioContext.suspend()
+}
+
+function resumeSample() {
+    audioContext.resume()
+}
+
 // Initialize the buttons and event listeners
 document.getElementById("load-song").addEventListener("click", async () => {
     const samples = await setupSamples(samplePaths)
     document.getElementById("play-song").addEventListener("click", () => {
-        samples.forEach((sample) => playSample(sample, 0))
+        if (isPaused === true) {
+            resumeSample()
+        } else 
+            samples.forEach((sample) => playSample(sample, 0))
+            isPaused = false
+    })
+    document.getElementById("pause-song").addEventListener("click", () => {
+        if (isPaused === false) {
+            pauseSample()
+            isPaused = true
+        } else return
     })
 })
+
+
 
 
 
